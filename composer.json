@@ -1,7 +1,7 @@
 {
     "name": "spryker-sdk/architector",
     "type": "library",
-    "description": "Architector",
+    "description": "Spryker Architector - tool for Spryker Architecture introspection",
     "license": "proprietary",
     "require": {
         "php": ">=7.4",
@@ -11,7 +11,7 @@
     },
     "require-dev": {
         "codeception/codeception": "^4.0.0",
-        "phpunit/phpunit": "*",
+        "phpunit/phpunit": "^9.0.0",
         "spryker/code-sniffer": "*",
         "spryker/testify": "^3.0.0"
     },
@@ -30,7 +30,7 @@
     "scripts": {
         "cs-check": "phpcs -p -s --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml --ignore=/Fixture/,/tests/_data/ src/ tests/",
         "cs-fix": "phpcbf -p --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml --ignore=/Fixture/,/tests/_data/ src/ tests/",
-        "phpstan": "phpstan analyse src/ --level=6",
+        "stan": "phpstan analyse src/ -l 7",
         "test": [
             "codecept build",
             "codecept run"
@@ -38,7 +38,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-master": "0.1.x-dev"
         }
     },
     "config": {
