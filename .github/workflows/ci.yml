@@ -57,7 +57,7 @@ jobs:
         run: composer cs-check
 
       - name: Static analysis
-        run: composer phpstan
+        run: composer stan
 
       - name: Codeception tests
         run: composer test
