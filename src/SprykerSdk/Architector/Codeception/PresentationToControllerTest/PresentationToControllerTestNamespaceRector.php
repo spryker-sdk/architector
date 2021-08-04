@@ -48,8 +48,11 @@ class PresentationToControllerTestNamespaceRector extends AbstractRector
             return null;
         }
 
-        array_pop($node->name->parts);
-        array_push($node->name->parts, 'Controller');
+        /** @var \PhpParser\Node\Name $subNode */
+        $subNode = $node->name;
+
+        array_pop($subNode->parts);
+        array_push($subNode->parts, 'Controller');
 
         return $node;
     }

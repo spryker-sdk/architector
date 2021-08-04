@@ -30,7 +30,7 @@
     "scripts": {
         "cs-check": "phpcs -p -s --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml --ignore=/Fixture/,/tests/_data/ src/ tests/",
         "cs-fix": "phpcbf -p --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml --ignore=/Fixture/,/tests/_data/ src/ tests/",
-        "stan": "phpstan analyse src/ -l 7",
+        "stan": "phpstan analyse src/ -l 8",
         "test": [
             "codecept build",
             "codecept run"

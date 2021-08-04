@@ -48,7 +48,9 @@ class PresentationToControllerTesterClassNameRector extends AbstractRector
             return null;
         }
 
-        $node->name->name = str_replace('PresentationTester', 'ControllerTester', $node->name->name);
+        /** @var \PhpParser\Node\Identifier $subNode */
+        $subNode = $node->name;
+        $subNode->name = str_replace('PresentationTester', 'ControllerTester', $subNode->name);
 
         return $node;
     }

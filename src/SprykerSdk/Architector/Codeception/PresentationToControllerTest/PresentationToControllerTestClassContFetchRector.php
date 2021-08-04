@@ -32,7 +32,7 @@ class PresentationToControllerTestClassContFetchRector extends AbstractRector
     public function refactor(Node $node): ?Node
     {
         if ($node->class instanceof FullyQualified && strpos((string)end($node->class->parts), 'PresentationTester') !== false) {
-            $classNameShort = array_pop($node->class->parts);
+            $classNameShort = (string)array_pop($node->class->parts);
             $classNameShort = str_replace('PresentationTester', 'ControllerTester', $classNameShort);
             array_push($node->class->parts, $classNameShort);
 

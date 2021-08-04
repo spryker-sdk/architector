@@ -23,7 +23,7 @@ class TestSuiteHelper
      */
     public function isPresentationTesterClass(Node $node): bool
     {
-        if ($node instanceof Class_ && strpos($node->name, 'PresentationTester') !== false) {
+        if ($node instanceof Class_ && strpos((string)$node->name, 'PresentationTester') !== false) {
             return true;
         }
 

@@ -71,7 +71,7 @@ class PresentationToControllerTestMethodParamRector extends AbstractRector
             /** @var Node\Name $name */
             $name = $param->type;
             $parts = $name->parts;
-            $className = array_pop($parts);
+            $className = (string)array_pop($parts);
 
             if (strpos($className, 'PresentationTester') === false) {
                 array_push($name->parts, $className);
