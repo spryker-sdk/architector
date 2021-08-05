@@ -13,7 +13,7 @@
         "codeception/codeception": "^4.0.0",
         "phpunit/phpunit": "^9.0.0",
         "spryker/code-sniffer": "*",
-        "symplify/rule-doc-generator": "^9.4"
+        "symplify/rule-doc-generator": "^9.3.26"
     },
     "autoload": {
         "psr-4": {
