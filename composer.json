@@ -34,7 +34,8 @@
         "test": [
             "codecept build",
             "codecept run"
-        ]
+        ],
+        "docs": "rule-doc-generator generate src/SprykerSdk/"
     },
     "extra": {
         "branch-alias": {

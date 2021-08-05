@@ -24,4 +24,4 @@ See documentation of `vendor/bin/rector`
 
 ### How to generate documentation
 
-Run `vendor/bin/rule-doc-generator generate src/SprykerSdk/` to generate documentation in `docs/rules_overview.md`
+Run `composer docs` to generate documentation in `docs/rules_overview.md`.
