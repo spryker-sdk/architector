@@ -19,3 +19,7 @@ The Architector is a tool that supports you in automated refactorings regarding 
 ### How to use the Architector?
 
 See documentation of `vendor/bin/rector`
+
+### How to generate documentation
+
+Run `vendor/bin/rule-doc-generator generate src/SprykerSdk/` to generate documentation in `docs/rules_overview.md`
