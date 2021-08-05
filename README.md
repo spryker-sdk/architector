@@ -16,6 +16,8 @@ This is a development only "require-dev" library. Please make sure you include i
 
 The Architector is a tool that supports you in automated refactorings regarding Spryker architecture and reports issues in your code.
 
+See [current rules](docs/rules_overview.md) for details.
+
 ### How to use the Architector?
 
 See documentation of `vendor/bin/rector`
