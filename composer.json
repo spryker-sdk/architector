@@ -12,7 +12,8 @@
     "require-dev": {
         "codeception/codeception": "^4.0.0",
         "phpunit/phpunit": "^9.0.0",
-        "spryker/code-sniffer": "*"
+        "spryker/code-sniffer": "*",
+        "symplify/rule-doc-generator": "^9.4"
     },
     "autoload": {
         "psr-4": {

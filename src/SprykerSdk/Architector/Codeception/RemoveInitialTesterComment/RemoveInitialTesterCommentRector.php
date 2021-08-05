@@ -10,6 +10,7 @@ namespace SprykerSdk\Architector\Codeception\RemoveInitialTesterComment;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Nop;
 use Rector\Core\Rector\AbstractRector;
+use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 class RemoveInitialTesterCommentRector extends AbstractRector
@@ -46,9 +47,21 @@ class RemoveInitialTesterCommentRector extends AbstractRector
      */
     public function getRuleDefinition(): RuleDefinition
     {
-        return new RuleDefinition(
-            'Removes the initial comment in tester classes.',
-            []
-        );
+        return new RuleDefinition('Removes the initial comment in tester classes.', [new CodeSample(<<<'CODE_SAMPLE'
+class SomeTest
+{
+    use _generated\XPresentationTesterActions;
+
+    /**
+     * Define custom actions here
+     */
+}
+CODE_SAMPLE, <<<'CODE_SAMPLE'
+class SomeTest
+{
+    use _generated\XPresentationTesterActions;
+}
+CODE_SAMPLE
+        )]);
     }
 }

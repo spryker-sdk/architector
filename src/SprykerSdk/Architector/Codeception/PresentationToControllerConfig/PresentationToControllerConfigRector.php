@@ -8,6 +8,7 @@
 namespace SprykerSdk\Architector\Codeception\PresentationToControllerConfig;
 
 use Symfony\Component\Yaml\Yaml;
+use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 class PresentationToControllerConfigRector implements PresentationToControllerConfigRectorInterface
@@ -90,9 +91,17 @@ class PresentationToControllerConfigRector implements PresentationToControllerCo
      */
     public function getRuleDefinition(): RuleDefinition
     {
-        return new RuleDefinition(
-            'Moves configuration from Presentation to Communication tests.',
-            []
-        );
+        return new RuleDefinition('Moves configuration from Presentation to Communication tests.', [new CodeSample(<<<'CODE_SAMPLE'
+suites:
+    Presentation:
+        path: Presentation
+        class_name: XyPresentationTester
+CODE_SAMPLE, <<<'CODE_SAMPLE'
+suites:
+    Communication:
+        path: Communication
+        class_name: XyCommunicationTester
+CODE_SAMPLE
+        )]);
     }
 }
