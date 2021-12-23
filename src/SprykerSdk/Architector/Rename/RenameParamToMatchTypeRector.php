@@ -153,22 +153,24 @@ CODE_SAMPLE
 
         foreach ($node->params as $param) {
             $expectedName = $this->expectedNameResolver->resolveForParamIfNotYet($param);
-            $expectedName = $this->getExpectedName($expectedName);
 
             if ($expectedName === null) {
                 continue;
             }
+
+            $expectedName = $this->getExpectedName($expectedName);
 
             if ($this->shouldSkipParam($param, $expectedName, $node)) {
                 continue;
             }
 
             $expectedName = $this->matchParamTypeExpectedNameResolver->resolve($param);
-            $expectedName = $this->getExpectedName($expectedName);
 
             if ($expectedName === null) {
                 continue;
             }
+            
+            $expectedName = $this->getExpectedName($expectedName);
 
             $paramRename = $this->paramRenameFactory->createFromResolvedExpectedName($param, $expectedName);
 
