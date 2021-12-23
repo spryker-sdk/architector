@@ -1,4 +1,4 @@
-# 10 Rules Overview
+# 11 Rules Overview
 
 ## PresentationToControllerConfigRector
 
@@ -156,6 +156,54 @@ Removes the initial comment in tester classes.
 -    /**
 -     * Define custom actions here
 -     */
+ }
+```
+
+<br>
+
+## RenameParamToMatchTypeRector
+
+Rename param to match ClassType
+
+- class: [`SprykerSdk\Architector\Rename\RenameParamToMatchTypeRector`](../src/SprykerSdk/Architector/Rename/RenameParamToMatchTypeRector.php)
+
+```diff
+ class SomeClass
+ {
+-    public function run(FooBarTransfer $fooBar)
++    public function run(FooBarTransfer $fooBarTransfer)
+     {
+-        $foo = $fooBar;
++        $foo = $fooBarTransfer;
+     }
+ }
+```
+
+<br>
+
+```diff
+ class SomeClass
+ {
+-    public function run(SpyFooBar $fooBar)
++    public function run(SpyFooBar $fooBarEntity)
+     {
+-        $foo = $fooBar;
++        $foo = $fooBarEntity;
+     }
+ }
+```
+
+<br>
+
+```diff
+ class SomeClass
+ {
+-    public function run(SpyFooBarQuery $fooBar)
++    public function run(SpyFooBarQuery $fooBarQuery)
+     {
+-        $foo = $fooBar;
++        $foo = $fooBarQuery;
+     }
  }
 ```
 
