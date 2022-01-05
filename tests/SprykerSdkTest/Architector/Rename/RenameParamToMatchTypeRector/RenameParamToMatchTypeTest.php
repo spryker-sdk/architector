@@ -5,13 +5,20 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace SprykerSdkTest\Architector\Codeception\PresentationToController;
+namespace SprykerSdkTest\Architector\Rename\RenameParamToMatchType;
 
 use Iterator;
 use Rector\Testing\PHPUnit\AbstractRectorTestCase;
 use Symplify\SmartFileSystem\SmartFileInfo;
 
-class PresentationToControllerConfigRectorTest extends AbstractRectorTestCase
+/**
+ * @group SprykerSdkTest
+ * @group Architector
+ * @group SprykerSdkTest
+ * @group RenameParamToMatchType
+ * @group RenameParamToMatchTypeTest
+ */
+class RenameParamToMatchTypeTest extends AbstractRectorTestCase
 {
     /**
      * @dataProvider provideData()
@@ -30,7 +37,7 @@ class PresentationToControllerConfigRectorTest extends AbstractRectorTestCase
      */
     public function provideData(): Iterator
     {
-        return $this->yieldFilesFromDirectory(__DIR__ . '/Fixture', '*.yml.inc');
+        return $this->yieldFilesFromDirectory(__DIR__ . '/Fixture');
     }
 
     /**

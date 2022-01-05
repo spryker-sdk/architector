@@ -31,7 +31,7 @@ class PresentationToControllerTestFileMoveRector extends AbstractRector
     }
 
     /**
-     * @return array<class-string<Node>>
+     * @return array<class-string<\PhpParser\Node>>
      */
     public function getNodeTypes(): array
     {
@@ -65,19 +65,26 @@ class PresentationToControllerTestFileMoveRector extends AbstractRector
      */
     public function getRuleDefinition(): RuleDefinition
     {
-        return new RuleDefinition('Moves Presentation test files to Controller directory', [new CodeSample(<<<'CODE_SAMPLE'
+        return new RuleDefinition(
+            'Moves Presentation test files to Controller directory',
+            [
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
 // file: tests/Presentation/SomeTest.php
 namespace Foo\Presentation;
 class SomeTest
 {
 }
-CODE_SAMPLE, <<<'CODE_SAMPLE'
+CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
 // file: tests/Controller/SomeTest.php
 namespace Foo\Controller;
 class SomeTest
 {
 }
-CODE_SAMPLE
-        )]);
+CODE_SAMPLE,
+                ),
+            ],
+        );
     }
 }

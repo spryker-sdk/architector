@@ -8,16 +8,18 @@
 namespace SprykerSdk\Architector\Codeception\PresentationToControllerConfig;
 
 use Rector\Core\Contract\Processor\FileProcessorInterface;
+use Rector\Core\ValueObject\Application\File;
+use Rector\Core\ValueObject\Configuration;
 
 final class PresentationToControllerConfigFileProcessor implements FileProcessorInterface
 {
     /**
-     * @var array<PresentationToControllerConfigRectorInterface>
+     * @var array<\SprykerSdk\Architector\Codeception\PresentationToControllerConfig\PresentationToControllerConfigRectorInterface>
      */
     private $rectors;
 
     /**
-     * @param array<PresentationToControllerConfigRectorInterface> $rectors
+     * @param array<\SprykerSdk\Architector\Codeception\PresentationToControllerConfig\PresentationToControllerConfigRectorInterface> $rectors
      */
     public function __construct(array $rectors)
     {
@@ -30,7 +32,7 @@ final class PresentationToControllerConfigFileProcessor implements FileProcessor
      *
      * @return bool
      */
-    public function supports($file, $configuration): bool
+    public function supports(File $file, Configuration $configuration): bool
     {
         $smartFileInfo = $file->getSmartFileInfo();
 
@@ -41,14 +43,16 @@ final class PresentationToControllerConfigFileProcessor implements FileProcessor
      * @param \Rector\Core\ValueObject\Application\File $file
      * @param \Rector\Core\ValueObject\Configuration $configuration
      *
-     * @return void
+     * @return array
      */
-    public function process($file, $configuration): void
+    public function process(File $file, Configuration $configuration): array
     {
         foreach ($this->rectors as $rector) {
             $changeFileContent = $rector->transform($file->getFileContent());
             $file->changeFileContent($changeFileContent);
         }
+
+        return [];
     }
 
     /**

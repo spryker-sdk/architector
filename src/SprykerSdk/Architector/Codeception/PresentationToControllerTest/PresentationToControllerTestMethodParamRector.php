@@ -43,7 +43,7 @@ class PresentationToControllerTestMethodParamRector extends AbstractRector
     }
 
     /**
-     * @return array<class-string<Node>>
+     * @return array<class-string<\PhpParser\Node>>
      */
     public function getNodeTypes(): array
     {
@@ -68,7 +68,7 @@ class PresentationToControllerTestMethodParamRector extends AbstractRector
                 continue;
             }
 
-            /** @var Node\Name $name */
+            /** @var \PhpParser\Node\Name $name */
             $name = $param->type;
             $parts = $name->parts;
             $className = (string)array_pop($parts);
@@ -82,7 +82,7 @@ class PresentationToControllerTestMethodParamRector extends AbstractRector
             $className = str_replace(
                 'PresentationTester',
                 'ControllerTester',
-                $className
+                $className,
             );
 
             array_push($parts, $className);
@@ -102,7 +102,7 @@ class PresentationToControllerTestMethodParamRector extends AbstractRector
     }
 
     /**
-     * @param Node\Param $param
+     * @param \PhpParser\Node\Param $param
      * @param string $className
      *
      * @return void
@@ -120,7 +120,7 @@ class PresentationToControllerTestMethodParamRector extends AbstractRector
     }
 
     /**
-     * @param Node\Param $param
+     * @param \PhpParser\Node\Param $param
      * @param \PhpParser\Node\Stmt\ClassMethod $classMethod
      * @param string $className
      *
@@ -148,7 +148,11 @@ class PresentationToControllerTestMethodParamRector extends AbstractRector
      */
     public function getRuleDefinition(): RuleDefinition
     {
-        return new RuleDefinition('Refactors method arguments and doc blocks from using XPresentationTester to XControllerTester', [new CodeSample(<<<'CODE_SAMPLE'
+        return new RuleDefinition(
+            'Refactors method arguments and doc blocks from using XPresentationTester to XControllerTester',
+            [
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
 namespace Foo\Presentation;
 class SomeTest
 {
@@ -159,7 +163,8 @@ class SomeTest
      */
     public function test(XPresentationTester $i) {}
 }
-CODE_SAMPLE, <<<'CODE_SAMPLE'
+CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
 namespace Foo\Presentation;
 class SomeTest
 {
@@ -170,7 +175,9 @@ class SomeTest
      */
     public function test(XControllerTester $i) {}
 }
-CODE_SAMPLE
-        )]);
+CODE_SAMPLE,
+                ),
+            ],
+        );
     }
 }

@@ -17,7 +17,7 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 class PresentationToControllerTestClassContFetchRector extends AbstractRector
 {
     /**
-     * @return array<class-string<Node>>
+     * @return array<class-string<\PhpParser\Node>>
      */
     public function getNodeTypes(): array
     {
@@ -47,11 +47,18 @@ class PresentationToControllerTestClassContFetchRector extends AbstractRector
      */
     public function getRuleDefinition(): RuleDefinition
     {
-        return new RuleDefinition('Replace usages of XPresentationTester::const with XControllerTester::const', [new CodeSample(<<<'CODE_SAMPLE'
+        return new RuleDefinition(
+            'Replace usages of XPresentationTester::const with XControllerTester::const',
+            [
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
 $foo = XPresentationTester::const;
-CODE_SAMPLE, <<<'CODE_SAMPLE'
+CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
 $foo = XControllerTester::const;
-CODE_SAMPLE
-        )]);
+CODE_SAMPLE,
+                ),
+            ],
+        );
     }
 }

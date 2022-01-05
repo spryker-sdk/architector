@@ -30,7 +30,7 @@ class PresentationToControllerTesterClassNameRector extends AbstractRector
     }
 
     /**
-     * @return array<class-string<Node>>
+     * @return array<class-string<\PhpParser\Node>>
      */
     public function getNodeTypes(): array
     {
@@ -60,17 +60,24 @@ class PresentationToControllerTesterClassNameRector extends AbstractRector
      */
     public function getRuleDefinition(): RuleDefinition
     {
-        return new RuleDefinition('Renames PresentationTester to ControllerTester', [new CodeSample(<<<'CODE_SAMPLE'
+        return new RuleDefinition(
+            'Renames PresentationTester to ControllerTester',
+            [
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
 namespace Foo\Presentation;
 class SomePresentationTester
 {
 }
-CODE_SAMPLE, <<<'CODE_SAMPLE'
+CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
 namespace Foo\Controller;
 class SomeControllerTester
 {
 }
-CODE_SAMPLE
-        )]);
+CODE_SAMPLE,
+                ),
+            ],
+        );
     }
 }

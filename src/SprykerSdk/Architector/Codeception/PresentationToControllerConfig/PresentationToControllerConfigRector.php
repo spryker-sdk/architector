@@ -14,7 +14,7 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 class PresentationToControllerConfigRector implements PresentationToControllerConfigRectorInterface
 {
     /**
-     * @var string[]
+     * @var array<string>
      */
     private $modulesToAdd = [
         '\SprykerTest\Shared\Testify\Helper\Environment',
@@ -23,7 +23,7 @@ class PresentationToControllerConfigRector implements PresentationToControllerCo
     ];
 
     /**
-     * @var string[]
+     * @var array<string>
      */
     private $modulesToRemove = [
         'Asserts',
@@ -83,7 +83,7 @@ class PresentationToControllerConfigRector implements PresentationToControllerCo
 
         $ymlAsArray['suites']['Controller']['modules']['enabled'] = $filteredEnabledModules;
 
-        return Yaml::dump($ymlAsArray);
+        return Yaml::dump($ymlAsArray, 50);
     }
 
     /**
@@ -91,17 +91,24 @@ class PresentationToControllerConfigRector implements PresentationToControllerCo
      */
     public function getRuleDefinition(): RuleDefinition
     {
-        return new RuleDefinition('Moves configuration from Presentation to Communication tests.', [new CodeSample(<<<'CODE_SAMPLE'
-suites:
-    Presentation:
-        path: Presentation
-        class_name: XyPresentationTester
-CODE_SAMPLE, <<<'CODE_SAMPLE'
-suites:
-    Communication:
-        path: Communication
-        class_name: XyCommunicationTester
-CODE_SAMPLE
-        )]);
+        return new RuleDefinition(
+            'Moves configuration from Presentation to Communication tests.',
+            [
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
+                    suites:
+                        Presentation:
+                            path: Presentation
+                            class_name: XyPresentationTester
+                    CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
+                    suites:
+                        Communication:
+                            path: Communication
+                            class_name: XyCommunicationTester
+                    CODE_SAMPLE,
+                ),
+            ],
+        );
     }
 }

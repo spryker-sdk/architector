@@ -38,7 +38,7 @@ class TestSuiteHelper
     public function isPresentationTesterActions(Node $node): bool
     {
         if ($node instanceof TraitUse) {
-            /** @var Node\Name\FullyQualified $trait */
+            /** @var \PhpParser\Node\Name\FullyQualified $trait */
             foreach ($node->traits as $trait) {
                 $traitNameParts = $trait->parts;
                 $lastElement = (string)end($traitNameParts);
@@ -62,7 +62,7 @@ class TestSuiteHelper
     public function isSuite(string $expectedSuiteName, Node $node): bool
     {
         if ($node instanceof Class_) {
-            $namespacedNameParts = $node->namespacedName->parts ?? [];
+            $namespacedNameParts = $node->namespacedName->parts;
 
             if ((isset($namespacedNameParts[3]) && $namespacedNameParts[3] === $expectedSuiteName)) {
                 return true;
@@ -75,7 +75,7 @@ class TestSuiteHelper
             /** @var \PhpParser\Node\Stmt\Class_ $parentNode */
             $parentNode = $node->getAttribute(AttributeKey::PARENT_NODE);
 
-            $namespacedNameParts = $parentNode->namespacedName->parts ?? [];
+            $namespacedNameParts = $parentNode->namespacedName->parts;
 
             if ($parentNode instanceof Class_ && (isset($namespacedNameParts[3]) && $namespacedNameParts[3] === $expectedSuiteName)) {
                 return true;
