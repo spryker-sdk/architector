@@ -30,7 +30,7 @@ class MethodParamRectorTest extends AbstractRectorTestCase
     }
 
     /**
-     * @return Iterator<\Symplify\SmartFileSystem\SmartFileInfo>
+     * @return \Iterator<\Symplify\SmartFileSystem\SmartFileInfo>
      */
     public function provideData(): Iterator
     {

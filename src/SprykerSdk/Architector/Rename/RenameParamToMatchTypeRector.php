@@ -169,7 +169,7 @@ CODE_SAMPLE
             if ($expectedName === null) {
                 continue;
             }
-            
+
             $expectedName = $this->getExpectedName($expectedName);
 
             $paramRename = $this->paramRenameFactory->createFromResolvedExpectedName($param, $expectedName);

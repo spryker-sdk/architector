@@ -12,12 +12,12 @@ use Rector\Core\Contract\Processor\FileProcessorInterface;
 final class PresentationToControllerConfigFileProcessor implements FileProcessorInterface
 {
     /**
-     * @var array<PresentationToControllerConfigRectorInterface>
+     * @var array<\SprykerSdk\Architector\Codeception\PresentationToControllerConfig\PresentationToControllerConfigRectorInterface>
      */
     private $rectors;
 
     /**
-     * @param array<PresentationToControllerConfigRectorInterface> $rectors
+     * @param array<\SprykerSdk\Architector\Codeception\PresentationToControllerConfig\PresentationToControllerConfigRectorInterface> $rectors
      */
     public function __construct(array $rectors)
     {

@@ -38,7 +38,7 @@ class TestSuiteHelper
     public function isPresentationTesterActions(Node $node): bool
     {
         if ($node instanceof TraitUse) {
-            /** @var Node\Name\FullyQualified $trait */
+            /** @var \PhpParser\Node\Name\FullyQualified $trait */
             foreach ($node->traits as $trait) {
                 $traitNameParts = $trait->parts;
                 $lastElement = (string)end($traitNameParts);
