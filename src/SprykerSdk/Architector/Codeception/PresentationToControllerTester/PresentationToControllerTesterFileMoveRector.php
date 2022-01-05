@@ -11,25 +11,11 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use Rector\Core\Rector\AbstractRector;
 use Rector\FileSystemRector\ValueObject\AddedFileWithNodes;
-use SprykerSdk\Architector\Codeception\RectorHelper\TestSuiteHelper;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 class PresentationToControllerTesterFileMoveRector extends AbstractRector
 {
-    /**
-     * @var \SprykerSdk\Architector\Codeception\RectorHelper\TestSuiteHelper
-     */
-    private $testSuiteHelper;
-
-    /**
-     * @param \SprykerSdk\Architector\Codeception\RectorHelper\TestSuiteHelper $testSuiteHelper
-     */
-    public function __construct(TestSuiteHelper $testSuiteHelper)
-    {
-        $this->testSuiteHelper = $testSuiteHelper;
-    }
-
     /**
      * @return array<class-string<\PhpParser\Node>>
      */
