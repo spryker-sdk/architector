@@ -83,7 +83,7 @@ class PresentationToControllerConfigRector implements PresentationToControllerCo
 
         $ymlAsArray['suites']['Controller']['modules']['enabled'] = $filteredEnabledModules;
 
-        return Yaml::dump($ymlAsArray);
+        return Yaml::dump($ymlAsArray, 50);
     }
 
     /**
