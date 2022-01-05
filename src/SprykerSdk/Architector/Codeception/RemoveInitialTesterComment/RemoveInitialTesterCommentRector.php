@@ -16,7 +16,7 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 class RemoveInitialTesterCommentRector extends AbstractRector
 {
     /**
-     * @return array<class-string<Node>>
+     * @return array<class-string<\PhpParser\Node>>
      */
     public function getNodeTypes(): array
     {
@@ -47,7 +47,11 @@ class RemoveInitialTesterCommentRector extends AbstractRector
      */
     public function getRuleDefinition(): RuleDefinition
     {
-        return new RuleDefinition('Removes the initial comment in tester classes.', [new CodeSample(<<<'CODE_SAMPLE'
+        return new RuleDefinition(
+            'Removes the initial comment in tester classes.',
+            [
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
 class SomeTest
 {
     use _generated\XPresentationTesterActions;
@@ -56,12 +60,15 @@ class SomeTest
      * Define custom actions here
      */
 }
-CODE_SAMPLE, <<<'CODE_SAMPLE'
+CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
 class SomeTest
 {
     use _generated\XPresentationTesterActions;
 }
-CODE_SAMPLE
-        )]);
+CODE_SAMPLE,
+                ),
+            ],
+        );
     }
 }

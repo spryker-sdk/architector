@@ -30,7 +30,7 @@ class PresentationToControllerTesterTraitUseRector extends AbstractRector
     }
 
     /**
-     * @return array<class-string<Node>>
+     * @return array<class-string<\PhpParser\Node>>
      */
     public function getNodeTypes(): array
     {
@@ -50,7 +50,7 @@ class PresentationToControllerTesterTraitUseRector extends AbstractRector
 
         $isModified = false;
 
-        /** @var Node\Name\FullyQualified $trait */
+        /** @var \PhpParser\Node\Name\FullyQualified $trait */
         foreach ($node->traits as $trait) {
             $traitNameParts = $trait->parts;
             $lastElement = (string)end($traitNameParts);
@@ -75,19 +75,26 @@ class PresentationToControllerTesterTraitUseRector extends AbstractRector
      */
     public function getRuleDefinition(): RuleDefinition
     {
-        return new RuleDefinition('Renames trait use from Presentation to Controller namespace', [new CodeSample(<<<'CODE_SAMPLE'
+        return new RuleDefinition(
+            'Renames trait use from Presentation to Controller namespace',
+            [
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
 namespace Foo\Presentation;
 class SomeTest
 {
     use _generated\XPresentationTesterActions;
 }
-CODE_SAMPLE, <<<'CODE_SAMPLE'
+CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
 namespace Foo\Presentation;
 class SomeTest
 {
     use _generated\XControllerTesterActions;
 }
-CODE_SAMPLE
-        )]);
+CODE_SAMPLE,
+                ),
+            ],
+        );
     }
 }

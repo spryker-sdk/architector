@@ -21,7 +21,7 @@ class TriggerErrorMessagesWithSprykerPrefixRector extends AbstractRector
     private string $sprykerPrefix = 'Spryker: ';
 
     /**
-     * @return array<class-string<Node>>
+     * @return array<class-string<\PhpParser\Node>>
      */
     public function getNodeTypes(): array
     {
@@ -36,7 +36,9 @@ class TriggerErrorMessagesWithSprykerPrefixRector extends AbstractRector
     public function refactor(Node $node): ?Node
     {
         if ($this->getName($node) === 'trigger_error') {
-            $messageArgument = $node->args[0]->value;
+            /** @var \PhpParser\Node\Arg $firstArgument */
+            $firstArgument = $node->args[0];
+            $messageArgument = $firstArgument->value;
 
             if ($messageArgument instanceof Concat) {
                 return $this->refactorConcatinatedString($messageArgument, $node);
@@ -148,7 +150,9 @@ class TriggerErrorMessagesWithSprykerPrefixRector extends AbstractRector
             return null;
         }
 
-        $stringArgument = $messageArgument->args[0]->value;
+        /** @var \PhpParser\Node\Arg $firstArgument */
+        $firstArgument = $messageArgument->args[0];
+        $stringArgument = $firstArgument->value;
 
         if (!($stringArgument instanceof String_)) {
             return null;
@@ -190,45 +194,55 @@ class TriggerErrorMessagesWithSprykerPrefixRector extends AbstractRector
         return new RuleDefinition(
             'Refactors trigger_error calls to ensure the passed message contains "Spryker: " as prefix.',
             [
-                new CodeSample(<<<'CODE_SAMPLE'
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
 trigger_error('My message', E_USER_DEPRECATED);
-CODE_SAMPLE, <<<'CODE_SAMPLE'
+CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
 trigger_error('Spryker: My message', E_USER_DEPRECATED);
-CODE_SAMPLE
+CODE_SAMPLE,
                 ),
-                new CodeSample(<<<'CODE_SAMPLE'
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
 $message = 'Foo';
 trigger_error($message, E_USER_DEPRECATED);
-CODE_SAMPLE, <<<'CODE_SAMPLE'
+CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
 $message = 'Spryker: Foo';
 trigger_error($message, E_USER_DEPRECATED);
-CODE_SAMPLE
+CODE_SAMPLE,
                 ),
-                new CodeSample(<<<'CODE_SAMPLE'
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
 $message = 'Foo' . 'Bar';
 trigger_error($message, E_USER_DEPRECATED);
-CODE_SAMPLE, <<<'CODE_SAMPLE'
+CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
 $message = 'Spryker: Foo' . 'Bar';
 trigger_error($message, E_USER_DEPRECATED);
-CODE_SAMPLE
+CODE_SAMPLE,
                 ),
-                new CodeSample(<<<'CODE_SAMPLE'
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
 $message = 'Foo' . 'Bar' . 'Baz';
 trigger_error($message, E_USER_DEPRECATED);
-CODE_SAMPLE, <<<'CODE_SAMPLE'
+CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
 $message = 'Spryker: Foo' . 'Bar' . 'Baz';
 trigger_error($message, E_USER_DEPRECATED);
-CODE_SAMPLE
+CODE_SAMPLE,
                 ),
-                new CodeSample(<<<'CODE_SAMPLE'
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
 $message = sprintf('Foo %s', $something);
 trigger_error($message, E_USER_DEPRECATED);
-CODE_SAMPLE, <<<'CODE_SAMPLE'
+CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
 $message = sprintf('Spryker: Foo %s', $something);
 trigger_error($message, E_USER_DEPRECATED);
-CODE_SAMPLE
+CODE_SAMPLE,
                 ),
-            ]
+            ],
         );
     }
 }

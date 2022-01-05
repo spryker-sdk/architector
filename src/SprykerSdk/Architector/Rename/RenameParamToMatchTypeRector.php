@@ -53,6 +53,13 @@ class RenameParamToMatchTypeRector extends AbstractRector
      */
     private $paramRenamer;
 
+    /**
+     * @param \Rector\Naming\Guard\BreakingVariableRenameGuard $breakingVariableRenameGuard
+     * @param \Rector\Naming\Naming\ExpectedNameResolver $expectedNameResolver
+     * @param \Rector\Naming\ExpectedNameResolver\MatchParamTypeExpectedNameResolver $matchParamTypeExpectedNameResolver
+     * @param \Rector\Naming\ValueObjectFactory\ParamRenameFactory $paramRenameFactory
+     * @param \Rector\Naming\ParamRenamer\ParamRenamer $paramRenamer
+     */
     public function __construct(
         BreakingVariableRenameGuard $breakingVariableRenameGuard,
         ExpectedNameResolver $expectedNameResolver,
@@ -68,14 +75,15 @@ class RenameParamToMatchTypeRector extends AbstractRector
     }
 
     /**
-     * @return RuleDefinition
-     * @throws \Symplify\RuleDocGenerator\Exception\PoorDocumentationException
+     * @return \Symplify\RuleDocGenerator\ValueObject\RuleDefinition
      */
     public function getRuleDefinition(): RuleDefinition
     {
-        return new RuleDefinition('Rename param to match ClassType',
+        return new RuleDefinition(
+            'Rename param to match ClassType',
             [
-                new CodeSample(<<<'CODE_SAMPLE'
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
 class SomeClass
 {
     public function run(FooBarTransfer $fooBar)
@@ -83,8 +91,8 @@ class SomeClass
         $foo = $fooBar;
     }
 }
-CODE_SAMPLE
-                    , <<<'CODE_SAMPLE'
+CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
 class SomeClass
 {
     public function run(FooBarTransfer $fooBarTransfer)
@@ -92,9 +100,10 @@ class SomeClass
         $foo = $fooBarTransfer;
     }
 }
-CODE_SAMPLE
+CODE_SAMPLE,
                 ),
-                new CodeSample(<<<'CODE_SAMPLE'
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
 class SomeClass
 {
     public function run(SpyFooBar $fooBar)
@@ -102,8 +111,8 @@ class SomeClass
         $foo = $fooBar;
     }
 }
-CODE_SAMPLE
-                    , <<<'CODE_SAMPLE'
+CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
 class SomeClass
 {
     public function run(SpyFooBar $fooBarEntity)
@@ -111,9 +120,10 @@ class SomeClass
         $foo = $fooBarEntity;
     }
 }
-CODE_SAMPLE
+CODE_SAMPLE,
                 ),
-                new CodeSample(<<<'CODE_SAMPLE'
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
 class SomeClass
 {
     public function run(SpyFooBarQuery $fooBar)
@@ -121,8 +131,8 @@ class SomeClass
         $foo = $fooBar;
     }
 }
-CODE_SAMPLE
-                    , <<<'CODE_SAMPLE'
+CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
 class SomeClass
 {
     public function run(SpyFooBarQuery $fooBarQuery)
@@ -130,14 +140,14 @@ class SomeClass
         $foo = $fooBarQuery;
     }
 }
-CODE_SAMPLE
+CODE_SAMPLE,
                 ),
-            ]
+            ],
         );
     }
 
     /**
-     * @return array<class-string<Node>>
+     * @return array<class-string<\PhpParser\Node>>
      */
     public function getNodeTypes(): array
     {
@@ -146,6 +156,8 @@ CODE_SAMPLE
 
     /**
      * @param \PhpParser\Node\Stmt\ClassMethod $node
+     *
+     * @return \PhpParser\Node|null
      */
     public function refactor(Node $node): ?Node
     {
@@ -181,6 +193,7 @@ CODE_SAMPLE
             $this->paramRenamer->rename($paramRename);
             $this->hasChanged = \true;
         }
+
         if (!$this->hasChanged) {
             return null;
         }
