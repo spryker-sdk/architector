@@ -8,8 +8,10 @@
 namespace SprykerSdk\Architector\Rename;
 
 use PhpParser\Node;
+use PhpParser\Node\NullableType;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\ClassMethod;
+use Propel\Runtime\Collection\ObjectCollection;
 use Rector\Core\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Core\Rector\AbstractRector;
 use Rector\Core\ValueObject\MethodName;
@@ -19,6 +21,9 @@ use Rector\Naming\Naming\ExpectedNameResolver;
 use Rector\Naming\ParamRenamer\ParamRenamer;
 use Rector\Naming\ValueObject\ParamRename;
 use Rector\Naming\ValueObjectFactory\ParamRenameFactory;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
@@ -33,11 +38,11 @@ class RenameParamToMatchTypeRector extends AbstractRector implements Configurabl
      * @var array<string>
      */
     private $classesToSkip = [
-        'ArrayObject',
-        'Error',
-        'Exception',
-        'Throwable',
-        '\Propel\Runtime\Collection\ObjectCollection',
+        ObjectCollection::class,
+        FormBuilderInterface::class,
+        FormBuilderInterface::class,
+        OptionsResolver::class,
+        FormView::class,
     ];
 
     /**
@@ -99,6 +104,7 @@ class RenameParamToMatchTypeRector extends AbstractRector implements Configurabl
     public function configure(array $configuration): void
     {
         $classesToSkip = $configuration[static::CLASSES_TO_SKIP] ?? $configuration;
+
         $this->classesToSkip = array_merge($classesToSkip, $this->classesToSkip);
     }
 
@@ -192,7 +198,11 @@ CODE_SAMPLE,
         $this->hasChanged = \false;
 
         foreach ($node->params as $param) {
-            if (in_array($param->type, $this->classesToSkip)) {
+            if ($param->type === null || $param->type instanceof NullableType) {
+                continue;
+            }
+
+            if (in_array((string)$param->type, $this->classesToSkip)) {
                 continue;
             }
 
