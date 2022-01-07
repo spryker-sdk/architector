@@ -10,6 +10,7 @@ namespace SprykerSdk\Architector\Rename;
 use PhpParser\Node;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\ClassMethod;
+use Rector\Core\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Core\Rector\AbstractRector;
 use Rector\Core\ValueObject\MethodName;
 use Rector\Naming\ExpectedNameResolver\MatchParamTypeExpectedNameResolver;
@@ -21,8 +22,24 @@ use Rector\Naming\ValueObjectFactory\ParamRenameFactory;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-class RenameParamToMatchTypeRector extends AbstractRector
+class RenameParamToMatchTypeRector extends AbstractRector implements ConfigurableRectorInterface
 {
+    /**
+     * @var string
+     */
+    public const CLASSES_TO_SKIP = 'classes_to_skip';
+
+    /**
+     * @var array<string>
+     */
+    private $classesToSkip = [
+        'ArrayObject',
+        'Error',
+        'Exception',
+        'Throwable',
+        '\Propel\Runtime\Collection\ObjectCollection',
+    ];
+
     /**
      * @var bool
      */
@@ -72,6 +89,17 @@ class RenameParamToMatchTypeRector extends AbstractRector
         $this->matchParamTypeExpectedNameResolver = $matchParamTypeExpectedNameResolver;
         $this->paramRenameFactory = $paramRenameFactory;
         $this->paramRenamer = $paramRenamer;
+    }
+
+    /**
+     * @param array $configuration
+     *
+     * @return void
+     */
+    public function configure(array $configuration): void
+    {
+        $classesToSkip = $configuration[static::CLASSES_TO_SKIP] ?? $configuration;
+        $this->classesToSkip = array_merge($classesToSkip, $this->classesToSkip);
     }
 
     /**
@@ -164,6 +192,10 @@ CODE_SAMPLE,
         $this->hasChanged = \false;
 
         foreach ($node->params as $param) {
+            if (in_array($param->type, $this->classesToSkip)) {
+                continue;
+            }
+
             $expectedName = $this->expectedNameResolver->resolveForParamIfNotYet($param);
 
             if ($expectedName === null) {
