@@ -7,6 +7,8 @@
 
 namespace SprykerSdk\Architector\Rename;
 
+use ArrayObject;
+use Exception;
 use PhpParser\Node;
 use PhpParser\Node\NullableType;
 use PhpParser\Node\Param;
@@ -26,8 +28,6 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
-use ArrayObject;
-use Exception;
 use Throwable;
 
 class RenameParamToMatchTypeRector extends AbstractRector implements ConfigurableRectorInterface

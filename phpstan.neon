@@ -1,2 +1,9 @@
 parameters:
-	checkMissingIterableValueType: false
+    checkMissingIterableValueType: false
+
+    ignoreErrors:
+            - '#Class .+ObjectCollection not found.#'
+            - '#Class .+FormBuilderInterface not found.#'
+            - '#Class .+OptionsResolver not found.#'
+            - '#Class .+FormView not found.#'
+            - '#Cannot cast .+ComplexType|.+Identifier|.+Name to string#'
