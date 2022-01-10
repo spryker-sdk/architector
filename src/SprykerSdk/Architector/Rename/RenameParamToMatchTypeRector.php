@@ -7,9 +7,14 @@
 
 namespace SprykerSdk\Architector\Rename;
 
+use ArrayObject;
+use Exception;
 use PhpParser\Node;
+use PhpParser\Node\NullableType;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\ClassMethod;
+use Propel\Runtime\Collection\ObjectCollection;
+use Rector\Core\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Core\Rector\AbstractRector;
 use Rector\Core\ValueObject\MethodName;
 use Rector\Naming\ExpectedNameResolver\MatchParamTypeExpectedNameResolver;
@@ -18,11 +23,34 @@ use Rector\Naming\Naming\ExpectedNameResolver;
 use Rector\Naming\ParamRenamer\ParamRenamer;
 use Rector\Naming\ValueObject\ParamRename;
 use Rector\Naming\ValueObjectFactory\ParamRenameFactory;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Throwable;
 
-class RenameParamToMatchTypeRector extends AbstractRector
+class RenameParamToMatchTypeRector extends AbstractRector implements ConfigurableRectorInterface
 {
+    /**
+     * @var string
+     */
+    public const CLASSES_TO_SKIP = 'classes_to_skip';
+
+    /**
+     * @var array<string>
+     */
+    private $classesToSkip = [
+        ObjectCollection::class,
+        FormBuilderInterface::class,
+        FormBuilderInterface::class,
+        OptionsResolver::class,
+        FormView::class,
+        Throwable::class,
+        ArrayObject::class,
+        Exception::class,
+    ];
+
     /**
      * @var bool
      */
@@ -72,6 +100,18 @@ class RenameParamToMatchTypeRector extends AbstractRector
         $this->matchParamTypeExpectedNameResolver = $matchParamTypeExpectedNameResolver;
         $this->paramRenameFactory = $paramRenameFactory;
         $this->paramRenamer = $paramRenamer;
+    }
+
+    /**
+     * @param array $configuration
+     *
+     * @return void
+     */
+    public function configure(array $configuration): void
+    {
+        $classesToSkip = $configuration[static::CLASSES_TO_SKIP] ?? $configuration;
+
+        $this->classesToSkip = array_merge($classesToSkip, $this->classesToSkip);
     }
 
     /**
@@ -164,6 +204,14 @@ CODE_SAMPLE,
         $this->hasChanged = \false;
 
         foreach ($node->params as $param) {
+            if ($param->type === null || $param->type instanceof NullableType) {
+                continue;
+            }
+
+            if (in_array((string)$param->type, $this->classesToSkip)) {
+                continue;
+            }
+
             $expectedName = $this->expectedNameResolver->resolveForParamIfNotYet($param);
 
             if ($expectedName === null) {
