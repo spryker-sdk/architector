@@ -26,7 +26,7 @@ use Rector\Naming\ValueObjectFactory\ParamRenameFactory;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
+use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 use Throwable;
 
@@ -36,6 +36,13 @@ class RenameParamToMatchTypeRector extends AbstractRector implements Configurabl
      * @var string
      */
     public const CLASSES_TO_SKIP = 'classes_to_skip';
+
+    /**
+     * @var array<string, array<string, mixed>>
+     */
+    private array $configuration = [
+        'classes_to_skip' => [],
+    ];
 
     /**
      * @var array<string>
@@ -122,7 +129,7 @@ class RenameParamToMatchTypeRector extends AbstractRector implements Configurabl
         return new RuleDefinition(
             'Rename param to match ClassType',
             [
-                new CodeSample(
+                new ConfiguredCodeSample(
                     <<<'CODE_SAMPLE'
 class SomeClass
 {
@@ -141,8 +148,9 @@ class SomeClass
     }
 }
 CODE_SAMPLE,
+                    $this->configuration,
                 ),
-                new CodeSample(
+                new ConfiguredCodeSample(
                     <<<'CODE_SAMPLE'
 class SomeClass
 {
@@ -161,8 +169,9 @@ class SomeClass
     }
 }
 CODE_SAMPLE,
+                    $this->configuration,
                 ),
-                new CodeSample(
+                new ConfiguredCodeSample(
                     <<<'CODE_SAMPLE'
 class SomeClass
 {
@@ -181,6 +190,7 @@ class SomeClass
     }
 }
 CODE_SAMPLE,
+                    $this->configuration,
                 ),
             ],
         );
