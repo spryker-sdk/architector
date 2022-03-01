@@ -23,6 +23,9 @@ use Rector\Naming\Naming\ExpectedNameResolver;
 use Rector\Naming\ParamRenamer\ParamRenamer;
 use Rector\Naming\ValueObject\ParamRename;
 use Rector\Naming\ValueObjectFactory\ParamRenameFactory;
+use Spryker\Zed\Gui\Communication\Table\TableConfiguration;
+use Spryker\Zed\Kernel\AbstractBundleConfig;
+use Spryker\Zed\Kernel\Persistence\QueryContainer\QueryContainerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -50,8 +53,10 @@ class RenameParamToMatchTypeRector extends AbstractRector implements Configurabl
     private $classesToSkip = [
         ObjectCollection::class,
         FormBuilderInterface::class,
-        FormBuilderInterface::class,
         OptionsResolver::class,
+        QueryContainerInterface::class,
+        TableConfiguration::class,
+        AbstractBundleConfig::class,
         FormView::class,
         Throwable::class,
         ArrayObject::class,
@@ -266,6 +271,11 @@ CODE_SAMPLE,
      */
     protected function getExpectedName(string $expectedName): string
     {
+        // QueryContainer
+        if (preg_match('/^[a-zA-Z]+QueryContainer/', $expectedName)) {
+            return preg_replace('/^[a-zA-Z]+QueryContainer/', 'queryContainer', $expectedName);
+        }
+
         // Propel Query
         if (preg_match('/^spy[a-zA-Z]+Query/', $expectedName)) {
             return lcfirst(ltrim($expectedName, 'spy'));
