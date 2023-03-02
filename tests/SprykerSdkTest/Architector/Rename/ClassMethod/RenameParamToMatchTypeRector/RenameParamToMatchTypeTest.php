@@ -1,28 +1,37 @@
-<?php declare(strict_types = 1);
+<?php
 
 /**
  * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace SprykerSdkTest\Architector\Codeception\PresentationToController;
+declare(strict_types=1);
+
+namespace SprykerSdkTest\Architector\Rename\ClassMethod\RenameParamToMatchType;
 
 use Iterator;
 use Rector\Testing\PHPUnit\AbstractRectorTestCase;
-use Symplify\SmartFileSystem\SmartFileInfo;
 
-class TraitUseRectorTest extends AbstractRectorTestCase
+/**
+ * @group SprykerSdkTest
+ * @group Architector
+ * @group SprykerSdkTest
+ * @group ClassMethod
+ * @group RenameParamToMatchType
+ * @group RenameParamToMatchTypeTest
+ */
+class RenameParamToMatchTypeTest extends AbstractRectorTestCase
 {
     /**
-     * @dataProvider provideData()
+     * @dataProvider provideData
      *
-     * @param \Symplify\SmartFileSystem\SmartFileInfo $fileInfo
+     * @param \Symplify\SmartFileSystem\SmartFileInfo|string $fileInfo
      *
      * @return void
      */
-    public function test(SmartFileInfo $fileInfo): void
+    public function test(string $fileInfo): void
     {
-        $this->doTestFileInfo($fileInfo);
+        $this->doTestFile($fileInfo);
     }
 
     /**

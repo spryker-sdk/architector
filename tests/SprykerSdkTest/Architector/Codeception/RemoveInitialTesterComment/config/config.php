@@ -1,11 +1,8 @@
 <?php declare(strict_types = 1);
 
+use Rector\Config\RectorConfig;
 use SprykerSdk\Architector\Codeception\RemoveInitialTesterComment\RemoveInitialTesterCommentRector;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-return static function (
-    ContainerConfigurator $containerConfigurator
-): void {
-    $services = $containerConfigurator->services();
-    $services->set(RemoveInitialTesterCommentRector::class);
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->rule(RemoveInitialTesterCommentRector::class);
 };

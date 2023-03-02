@@ -4,16 +4,13 @@
     "description": "Spryker Architector - tool for Spryker Architecture introspection",
     "license": "proprietary",
     "require": {
-        "php": ">=7.4",
-        "ext-dom": "*",
-        "ext-simplexml": "*",
-        "rector/rector": "^0.11.42 || ^0.12.0",
-        "symplify/rule-doc-generator": "^9.0 || ^10.0"
+        "php": ">=8.0",
+        "rector/rector": "^0.15.19",
+        "symplify/rule-doc-generator": "^11.2.0"
     },
     "require-dev": {
-        "codeception/codeception": "^4.1.0",
-        "phpunit/phpunit": "^9.5.0",
-        "spryker/code-sniffer": "*"
+        "codeception/codeception": "^5.0.0",
+        "spryker/code-sniffer": "^0.17.18"
     },
     "autoload": {
         "psr-4": {
@@ -29,14 +26,15 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "cs-check": "phpcs -p -s --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml --ignore=/Fixture/,/tests/_data/ src/ tests/",
-        "cs-fix": "phpcbf -p --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml --ignore=/Fixture/,/tests/_data/ src/ tests/",
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
         "stan": "phpstan analyse src/ -l 8",
         "test": [
             "codecept build",
             "codecept run"
         ],
-        "docs": "rule-doc-generator generate src/SprykerSdk/"
+        "docs": "rule-doc-generator generate src/SprykerSdk/",
+        "local-ci": "composer cs-fix && composer cs-check && composer stan && composer test && composer docs"
     },
     "extra": {
         "branch-alias": {

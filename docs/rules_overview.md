@@ -1,4 +1,4 @@
-# 11 Rules Overview
+# 13 Rules Overview
 
 ## PresentationToControllerConfigRector
 
@@ -165,7 +165,27 @@ Removes the initial comment in tester classes.
 
 Rename param to match ClassType
 
-- class: [`SprykerSdk\Architector\Rename\RenameParamToMatchTypeRector`](../src/SprykerSdk/Architector/Rename/RenameParamToMatchTypeRector.php)
+:wrench: **configure it!**
+
+- class: [`SprykerSdk\Architector\Rename\ClassMethod\RenameParamToMatchTypeRector`](../src/SprykerSdk/Architector/Rename/ClassMethod/RenameParamToMatchTypeRector.php)
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Rector\Config\RectorConfig;
+use SprykerSdk\Architector\Rename\ClassMethod\RenameParamToMatchTypeRector;
+
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->ruleWithConfiguration(RenameParamToMatchTypeRector::class, [
+        RenameParamToMatchTypeRector::CLASSES_TO_SKIP => [
+        ],
+    ]);
+};
+```
+
+↓
 
 ```diff
  class SomeClass
@@ -181,6 +201,24 @@ Rename param to match ClassType
 
 <br>
 
+```php
+<?php
+
+declare(strict_types=1);
+
+use Rector\Config\RectorConfig;
+use SprykerSdk\Architector\Rename\ClassMethod\RenameParamToMatchTypeRector;
+
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->ruleWithConfiguration(RenameParamToMatchTypeRector::class, [
+        RenameParamToMatchTypeRector::CLASSES_TO_SKIP => [
+        ],
+    ]);
+};
+```
+
+↓
+
 ```diff
  class SomeClass
  {
@@ -195,6 +233,24 @@ Rename param to match ClassType
 
 <br>
 
+```php
+<?php
+
+declare(strict_types=1);
+
+use Rector\Config\RectorConfig;
+use SprykerSdk\Architector\Rename\ClassMethod\RenameParamToMatchTypeRector;
+
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->ruleWithConfiguration(RenameParamToMatchTypeRector::class, [
+        RenameParamToMatchTypeRector::CLASSES_TO_SKIP => [
+        ],
+    ]);
+};
+```
+
+↓
+
 ```diff
  class SomeClass
  {
@@ -203,6 +259,151 @@ Rename param to match ClassType
      {
 -        $foo = $fooBar;
 +        $foo = $fooBarQuery;
+     }
+ }
+```
+
+<br>
+
+## RenameParamToMatchTypeRector
+
+Rename param to match ClassType
+
+:wrench: **configure it!**
+
+- class: [`SprykerSdk\Architector\Rename\RenameParamToMatchTypeRector`](../src/SprykerSdk/Architector/Rename/RenameParamToMatchTypeRector.php)
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Rector\Config\RectorConfig;
+use SprykerSdk\Architector\Rename\RenameParamToMatchTypeRector;
+
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->ruleWithConfiguration(RenameParamToMatchTypeRector::class, [
+        RenameParamToMatchTypeRector::CLASSES_TO_SKIP => [
+        ],
+    ]);
+};
+```
+
+↓
+
+```diff
+ class SomeClass
+ {
+-    public function run(FooBarTransfer $fooBar)
++    public function run(FooBarTransfer $fooBarTransfer)
+     {
+-        $foo = $fooBar;
++        $foo = $fooBarTransfer;
+     }
+ }
+```
+
+<br>
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Rector\Config\RectorConfig;
+use SprykerSdk\Architector\Rename\RenameParamToMatchTypeRector;
+
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->ruleWithConfiguration(RenameParamToMatchTypeRector::class, [
+        RenameParamToMatchTypeRector::CLASSES_TO_SKIP => [
+        ],
+    ]);
+};
+```
+
+↓
+
+```diff
+ class SomeClass
+ {
+-    public function run(SpyFooBar $fooBar)
++    public function run(SpyFooBar $fooBarEntity)
+     {
+-        $foo = $fooBar;
++        $foo = $fooBarEntity;
+     }
+ }
+```
+
+<br>
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Rector\Config\RectorConfig;
+use SprykerSdk\Architector\Rename\RenameParamToMatchTypeRector;
+
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->ruleWithConfiguration(RenameParamToMatchTypeRector::class, [
+        RenameParamToMatchTypeRector::CLASSES_TO_SKIP => [
+        ],
+    ]);
+};
+```
+
+↓
+
+```diff
+ class SomeClass
+ {
+-    public function run(SpyFooBarQuery $fooBar)
++    public function run(SpyFooBarQuery $fooBarQuery)
+     {
+-        $foo = $fooBar;
++        $foo = $fooBarQuery;
+     }
+ }
+```
+
+<br>
+
+## RenameVariableToMatchNewTypeRector
+
+Rename variable to match new ClassType
+
+:wrench: **configure it!**
+
+- class: [`SprykerSdk\Architector\Rename\ClassMethod\RenameVariableToMatchNewTypeRector`](../src/SprykerSdk/Architector/Rename/ClassMethod/RenameVariableToMatchNewTypeRector.php)
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Rector\Config\RectorConfig;
+use SprykerSdk\Architector\Rename\ClassMethod\RenameVariableToMatchNewTypeRector;
+
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->ruleWithConfiguration(RenameVariableToMatchNewTypeRector::class, [
+        RenameVariableToMatchNewTypeRector::CLASSES_TO_SKIP => [
+        ],
+    ]);
+};
+```
+
+↓
+
+```diff
+ final class SomeClass
+ {
+     public function run()
+     {
+-        $search = new DreamSearch();
+-        $search->advance();
++        $dreamSearch = new DreamSearch();
++        $dreamSearch->advance();
      }
  }
 ```

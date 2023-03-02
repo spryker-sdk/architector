@@ -1,35 +1,37 @@
-<?php declare(strict_types = 1);
+<?php
 
 /**
  * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace SprykerSdkTest\Architector\Rename\RenameParamToMatchType;
+declare(strict_types=1);
+
+namespace SprykerSdkTest\Architector\Rename\ClassMethod\RenameVariableToMatchNewType;
 
 use Iterator;
 use Rector\Testing\PHPUnit\AbstractRectorTestCase;
-use Symplify\SmartFileSystem\SmartFileInfo;
 
 /**
  * @group SprykerSdkTest
  * @group Architector
  * @group SprykerSdkTest
+ * @group ClassMethod
  * @group RenameParamToMatchType
- * @group RenameParamToMatchTypeTest
+ * @group RenameVariableToMatchNewTypeTest
  */
-class RenameParamToMatchTypeTest extends AbstractRectorTestCase
+class RenameVariableToMatchNewTypeTest extends AbstractRectorTestCase
 {
     /**
-     * @dataProvider provideData()
+     * @dataProvider provideData
      *
-     * @param \Symplify\SmartFileSystem\SmartFileInfo $fileInfo
+     * @param \Symplify\SmartFileSystem\SmartFileInfo|string $fileInfo
      *
      * @return void
      */
-    public function test(SmartFileInfo $fileInfo): void
+    public function test(string $fileInfo): void
     {
-        $this->doTestFileInfo($fileInfo);
+        $this->doTestFile($fileInfo);
     }
 
     /**
