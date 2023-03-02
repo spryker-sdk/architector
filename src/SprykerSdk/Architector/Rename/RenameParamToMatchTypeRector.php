@@ -102,7 +102,7 @@ class RenameParamToMatchTypeRector extends AbstractRector implements Configurabl
         ExpectedNameResolver $expectedNameResolver,
         MatchParamTypeExpectedNameResolver $matchParamTypeExpectedNameResolver,
         ParamRenameFactory $paramRenameFactory,
-        ParamRenamer $paramRenamer
+        ParamRenamer $paramRenamer,
     ) {
         $this->breakingVariableRenameGuard = $breakingVariableRenameGuard;
         $this->expectedNameResolver = $expectedNameResolver;

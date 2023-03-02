@@ -80,7 +80,7 @@ final class RenameVariableToMatchNewTypeRector extends AbstractRector implements
     public function __construct(
         BreakingVariableRenameGuard $breakingVariableRenameGuard,
         ExpectedNameResolver $expectedNameResolver,
-        VariableRenamer $variableRenamer
+        VariableRenamer $variableRenamer,
     ) {
         $this->breakingVariableRenameGuard = $breakingVariableRenameGuard;
         $this->expectedNameResolver = $expectedNameResolver;
@@ -145,8 +145,9 @@ CODE_SAMPLE, $this->configuration)]);
         foreach ($assignsOfNew as $assignOfNew) {
             $newExpr = $assignOfNew->expr;
             if ($newExpr instanceof New_) {
-                $className = (string)$newExpr->class;
-                if (in_array($className, $this->classesToSkip)) {
+                /** @var \PhpParser\Node\Name\FullyQualified $className */
+                $className = $newExpr->class;
+                if (in_array((string)$className, $this->classesToSkip)) {
                     continue;
                 }
             }
