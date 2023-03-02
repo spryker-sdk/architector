@@ -6,13 +6,11 @@
 
 declare(strict_types = 1);
 
+use Rector\Config\RectorConfig;
 use SprykerSdk\Architector\Rename\RenameParamToMatchTypeRector;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use SprykerSdk\Architector\Rename\ClassMethod\RenameVariableToMatchNewTypeRector;
 
-return static function (
-    ContainerConfigurator $containerConfigurator
-): void {
-    $services = $containerConfigurator->services();
-
-    $services->set(RenameParamToMatchTypeRector::class);
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->rule(RenameParamToMatchTypeRector::class);
+    $rectorConfig->rule(RenameVariableToMatchNewTypeRector::class);
 };

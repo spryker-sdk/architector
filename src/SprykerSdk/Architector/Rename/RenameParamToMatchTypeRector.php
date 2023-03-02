@@ -16,7 +16,7 @@ use PhpParser\Node\NullableType;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\ClassMethod;
 use Propel\Runtime\Collection\ObjectCollection;
-use Rector\Core\Contract\Rector\ConfigurableRectorInterface;
+use Rector\Core\Contract\Rector\AllowEmptyConfigurableRectorInterface;
 use Rector\Core\Rector\AbstractRector;
 use Rector\Core\ValueObject\MethodName;
 use Rector\Naming\ExpectedNameResolver\MatchParamTypeExpectedNameResolver;
@@ -32,7 +32,7 @@ use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 use Throwable;
 
-class RenameParamToMatchTypeRector extends AbstractRector implements ConfigurableRectorInterface
+class RenameParamToMatchTypeRector extends AbstractRector implements AllowEmptyConfigurableRectorInterface
 {
     /**
      * @var string
@@ -102,7 +102,7 @@ class RenameParamToMatchTypeRector extends AbstractRector implements Configurabl
         ExpectedNameResolver $expectedNameResolver,
         MatchParamTypeExpectedNameResolver $matchParamTypeExpectedNameResolver,
         ParamRenameFactory $paramRenameFactory,
-        ParamRenamer $paramRenamer,
+        ParamRenamer $paramRenamer
     ) {
         $this->breakingVariableRenameGuard = $breakingVariableRenameGuard;
         $this->expectedNameResolver = $expectedNameResolver;
