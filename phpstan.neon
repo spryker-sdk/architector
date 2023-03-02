@@ -7,4 +7,3 @@ parameters:
             - '#Class .+OptionsResolver not found.#'
             - '#Class .+FormView not found.#'
             - '#Cannot cast .+ComplexType|.+Identifier|.+Name to string#'
-            - '#Access to an undefined property .+::\$removedAndAddedFilesCollector#'

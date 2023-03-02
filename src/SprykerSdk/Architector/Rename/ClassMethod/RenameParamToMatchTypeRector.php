@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace SprykerSdk\Architector\Rename;
+namespace SprykerSdk\Architector\Rename\ClassMethod;
 
 use ArrayObject;
 use Exception;

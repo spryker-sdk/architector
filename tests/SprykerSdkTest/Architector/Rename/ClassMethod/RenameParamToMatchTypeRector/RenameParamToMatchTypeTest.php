@@ -7,12 +7,20 @@
 
 declare(strict_types=1);
 
-namespace Utils\RectorTest\Codeception\RemoveInitialTesterComment;
+namespace SprykerSdkTest\Architector\Rename\ClassMethod\RenameParamToMatchType;
 
 use Iterator;
 use Rector\Testing\PHPUnit\AbstractRectorTestCase;
 
-class RemoveInitialTesterCommentRectorTest extends AbstractRectorTestCase
+/**
+ * @group SprykerSdkTest
+ * @group Architector
+ * @group SprykerSdkTest
+ * @group ClassMethod
+ * @group RenameParamToMatchType
+ * @group RenameParamToMatchTypeTest
+ */
+class RenameParamToMatchTypeTest extends AbstractRectorTestCase
 {
     /**
      * @dataProvider provideData

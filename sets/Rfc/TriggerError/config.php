@@ -1,11 +1,8 @@
 <?php declare(strict_types = 1);
 
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Rector\Config\RectorConfig;
 use SprykerSdk\Architector\TriggerError\TriggerErrorMessagesWithSprykerPrefixRector;
 
-return static function (
-    ContainerConfigurator $containerConfigurator
-): void {
-    $services = $containerConfigurator->services();
-    $services->set(TriggerErrorMessagesWithSprykerPrefixRector::class);
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->rule(TriggerErrorMessagesWithSprykerPrefixRector::class);
 };

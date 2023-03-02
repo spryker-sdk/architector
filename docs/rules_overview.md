@@ -1,146 +1,4 @@
-# 11 Rules Overview
-
-## PresentationToControllerConfigRector
-
-Moves configuration from Presentation to Communication tests.
-
-- class: [`SprykerSdk\Architector\Codeception\PresentationToControllerConfig\PresentationToControllerConfigRector`](../src/SprykerSdk/Architector/Codeception/PresentationToControllerConfig/PresentationToControllerConfigRector.php)
-
-```diff
- suites:
--    Presentation:
--        path: Presentation
--        class_name: XyPresentationTester
-+    Communication:
-+        path: Communication
-+        class_name: XyCommunicationTester
-```
-
-<br>
-
-## PresentationToControllerTestClassContFetchRector
-
-Replace usages of XPresentationTester::const with XControllerTester::const
-
-- class: [`SprykerSdk\Architector\Codeception\PresentationToControllerTest\PresentationToControllerTestClassContFetchRector`](../src/SprykerSdk/Architector/Codeception/PresentationToControllerTest/PresentationToControllerTestClassContFetchRector.php)
-
-```diff
--$foo = XPresentationTester::const;
-+$foo = XControllerTester::const;
-```
-
-<br>
-
-## PresentationToControllerTestFileMoveRector
-
-Moves Presentation test files to Controller directory
-
-- class: [`SprykerSdk\Architector\Codeception\PresentationToControllerTest\PresentationToControllerTestFileMoveRector`](../src/SprykerSdk/Architector/Codeception/PresentationToControllerTest/PresentationToControllerTestFileMoveRector.php)
-
-```diff
--// file: tests/Presentation/SomeTest.php
--namespace Foo\Presentation;
-+// file: tests/Controller/SomeTest.php
-+namespace Foo\Controller;
- class SomeTest
- {
- }
-```
-
-<br>
-
-## PresentationToControllerTestMethodParamRector
-
-Refactors method arguments and doc blocks from using XPresentationTester to XControllerTester
-
-- class: [`SprykerSdk\Architector\Codeception\PresentationToControllerTest\PresentationToControllerTestMethodParamRector`](../src/SprykerSdk/Architector/Codeception/PresentationToControllerTest/PresentationToControllerTestMethodParamRector.php)
-
-```diff
- namespace Foo\Presentation;
- class SomeTest
- {
-     /**
--     * @param XPresentationTester $i
-+     * @param XControllerTester $i
-      *
-      * @return void
-      */
--    public function test(XPresentationTester $i) {}
-+    public function test(XControllerTester $i) {}
- }
-```
-
-<br>
-
-## PresentationToControllerTestNamespaceRector
-
-Refactors namespace from Presentation to Controller
-
-- class: [`SprykerSdk\Architector\Codeception\PresentationToControllerTest\PresentationToControllerTestNamespaceRector`](../src/SprykerSdk/Architector/Codeception/PresentationToControllerTest/PresentationToControllerTestNamespaceRector.php)
-
-```diff
--namespace Foo\Presentation;
-+namespace Foo\Controller;
-
- class SomeTest
- {
- }
-```
-
-<br>
-
-## PresentationToControllerTesterClassNameRector
-
-Renames PresentationTester to ControllerTester
-
-- class: [`SprykerSdk\Architector\Codeception\PresentationToControllerTester\PresentationToControllerTesterClassNameRector`](../src/SprykerSdk/Architector/Codeception/PresentationToControllerTester/PresentationToControllerTesterClassNameRector.php)
-
-```diff
--namespace Foo\Presentation;
--class SomePresentationTester
-+namespace Foo\Controller;
-+class SomeControllerTester
- {
- }
-```
-
-<br>
-
-## PresentationToControllerTesterFileMoveRector
-
-Moves Presentation test to Controller test suite namespace
-
-- class: [`SprykerSdk\Architector\Codeception\PresentationToControllerTester\PresentationToControllerTesterFileMoveRector`](../src/SprykerSdk/Architector/Codeception/PresentationToControllerTester/PresentationToControllerTesterFileMoveRector.php)
-
-```diff
--// file: tests/Presentation/SomeTest.php
--namespace Foo\Presentation;
--class SomePresentationTest
-+// file: tests/Controller/SomeTest.php
-+namespace Foo\Controller;
-+class SomeTest
- {
- }
-```
-
-<br>
-
-## PresentationToControllerTesterTraitUseRector
-
-Renames trait use from Presentation to Controller namespace
-
-- class: [`SprykerSdk\Architector\Codeception\PresentationToControllerTester\PresentationToControllerTesterTraitUseRector`](../src/SprykerSdk/Architector/Codeception/PresentationToControllerTester/PresentationToControllerTesterTraitUseRector.php)
-
-```diff
- namespace Foo\Presentation;
- class SomeTest
- {
--    use _generated\XPresentationTesterActions;
-+    use _generated\XControllerTesterActions;
- }
-```
-
-<br>
+# 5 Rules Overview
 
 ## RemoveInitialTesterCommentRector
 
@@ -165,7 +23,27 @@ Removes the initial comment in tester classes.
 
 Rename param to match ClassType
 
-- class: [`SprykerSdk\Architector\Rename\RenameParamToMatchTypeRector`](../src/SprykerSdk/Architector/Rename/RenameParamToMatchTypeRector.php)
+:wrench: **configure it!**
+
+- class: [`SprykerSdk\Architector\Rename\ClassMethod\RenameParamToMatchTypeRector`](../src/SprykerSdk/Architector/Rename/ClassMethod/RenameParamToMatchTypeRector.php)
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Rector\Config\RectorConfig;
+use SprykerSdk\Architector\Rename\ClassMethod\RenameParamToMatchTypeRector;
+
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->ruleWithConfiguration(RenameParamToMatchTypeRector::class, [
+        RenameParamToMatchTypeRector::CLASSES_TO_SKIP => [
+        ],
+    ]);
+};
+```
+
+↓
 
 ```diff
  class SomeClass
@@ -181,6 +59,24 @@ Rename param to match ClassType
 
 <br>
 
+```php
+<?php
+
+declare(strict_types=1);
+
+use Rector\Config\RectorConfig;
+use SprykerSdk\Architector\Rename\ClassMethod\RenameParamToMatchTypeRector;
+
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->ruleWithConfiguration(RenameParamToMatchTypeRector::class, [
+        RenameParamToMatchTypeRector::CLASSES_TO_SKIP => [
+        ],
+    ]);
+};
+```
+
+↓
+
 ```diff
  class SomeClass
  {
@@ -195,6 +91,24 @@ Rename param to match ClassType
 
 <br>
 
+```php
+<?php
+
+declare(strict_types=1);
+
+use Rector\Config\RectorConfig;
+use SprykerSdk\Architector\Rename\ClassMethod\RenameParamToMatchTypeRector;
+
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->ruleWithConfiguration(RenameParamToMatchTypeRector::class, [
+        RenameParamToMatchTypeRector::CLASSES_TO_SKIP => [
+        ],
+    ]);
+};
+```
+
+↓
+
 ```diff
  class SomeClass
  {
@@ -203,6 +117,151 @@ Rename param to match ClassType
      {
 -        $foo = $fooBar;
 +        $foo = $fooBarQuery;
+     }
+ }
+```
+
+<br>
+
+## RenameParamToMatchTypeRector
+
+Rename param to match ClassType
+
+:wrench: **configure it!**
+
+- class: [`SprykerSdk\Architector\Rename\RenameParamToMatchTypeRector`](../src/SprykerSdk/Architector/Rename/RenameParamToMatchTypeRector.php)
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Rector\Config\RectorConfig;
+use SprykerSdk\Architector\Rename\RenameParamToMatchTypeRector;
+
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->ruleWithConfiguration(RenameParamToMatchTypeRector::class, [
+        RenameParamToMatchTypeRector::CLASSES_TO_SKIP => [
+        ],
+    ]);
+};
+```
+
+↓
+
+```diff
+ class SomeClass
+ {
+-    public function run(FooBarTransfer $fooBar)
++    public function run(FooBarTransfer $fooBarTransfer)
+     {
+-        $foo = $fooBar;
++        $foo = $fooBarTransfer;
+     }
+ }
+```
+
+<br>
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Rector\Config\RectorConfig;
+use SprykerSdk\Architector\Rename\RenameParamToMatchTypeRector;
+
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->ruleWithConfiguration(RenameParamToMatchTypeRector::class, [
+        RenameParamToMatchTypeRector::CLASSES_TO_SKIP => [
+        ],
+    ]);
+};
+```
+
+↓
+
+```diff
+ class SomeClass
+ {
+-    public function run(SpyFooBar $fooBar)
++    public function run(SpyFooBar $fooBarEntity)
+     {
+-        $foo = $fooBar;
++        $foo = $fooBarEntity;
+     }
+ }
+```
+
+<br>
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Rector\Config\RectorConfig;
+use SprykerSdk\Architector\Rename\RenameParamToMatchTypeRector;
+
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->ruleWithConfiguration(RenameParamToMatchTypeRector::class, [
+        RenameParamToMatchTypeRector::CLASSES_TO_SKIP => [
+        ],
+    ]);
+};
+```
+
+↓
+
+```diff
+ class SomeClass
+ {
+-    public function run(SpyFooBarQuery $fooBar)
++    public function run(SpyFooBarQuery $fooBarQuery)
+     {
+-        $foo = $fooBar;
++        $foo = $fooBarQuery;
+     }
+ }
+```
+
+<br>
+
+## RenameVariableToMatchNewTypeRector
+
+Rename variable to match new ClassType
+
+:wrench: **configure it!**
+
+- class: [`SprykerSdk\Architector\Rename\ClassMethod\RenameVariableToMatchNewTypeRector`](../src/SprykerSdk/Architector/Rename/ClassMethod/RenameVariableToMatchNewTypeRector.php)
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Rector\Config\RectorConfig;
+use SprykerSdk\Architector\Rename\ClassMethod\RenameVariableToMatchNewTypeRector;
+
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->ruleWithConfiguration(RenameVariableToMatchNewTypeRector::class, [
+        RenameVariableToMatchNewTypeRector::CLASSES_TO_SKIP => [
+        ],
+    ]);
+};
+```
+
+↓
+
+```diff
+ final class SomeClass
+ {
+     public function run()
+     {
+-        $search = new DreamSearch();
+-        $search->advance();
++        $dreamSearch = new DreamSearch();
++        $dreamSearch->advance();
      }
  }
 ```
