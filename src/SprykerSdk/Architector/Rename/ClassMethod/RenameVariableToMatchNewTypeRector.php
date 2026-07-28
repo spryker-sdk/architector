@@ -33,26 +33,6 @@ use Throwable;
 final class RenameVariableToMatchNewTypeRector extends AbstractRector implements ConfigurableRectorInterface
 {
     /**
-     * @var \Rector\Naming\Guard\BreakingVariableRenameGuard
-     */
-    private BreakingVariableRenameGuard $breakingVariableRenameGuard;
-
-    /**
-     * @var \Rector\Naming\Naming\ExpectedNameResolver
-     */
-    private ExpectedNameResolver $expectedNameResolver;
-
-    /**
-     * @var \Rector\Naming\VariableRenamer
-     */
-    private VariableRenamer $variableRenamer;
-
-    /**
-     * @var \Rector\PhpParser\Node\BetterNodeFinder
-     */
-    private BetterNodeFinder $betterNodeFinder;
-
-    /**
      * @var string
      */
     public const CLASSES_TO_SKIP = 'classes_to_skip';
@@ -85,15 +65,11 @@ final class RenameVariableToMatchNewTypeRector extends AbstractRector implements
      * @param \Rector\PhpParser\Node\BetterNodeFinder $betterNodeFinder
      */
     public function __construct(
-        BreakingVariableRenameGuard $breakingVariableRenameGuard,
-        ExpectedNameResolver $expectedNameResolver,
-        VariableRenamer $variableRenamer,
-        BetterNodeFinder $betterNodeFinder,
+        private readonly BreakingVariableRenameGuard $breakingVariableRenameGuard,
+        private readonly ExpectedNameResolver $expectedNameResolver,
+        private readonly VariableRenamer $variableRenamer,
+        private readonly BetterNodeFinder $betterNodeFinder,
     ) {
-        $this->breakingVariableRenameGuard = $breakingVariableRenameGuard;
-        $this->expectedNameResolver = $expectedNameResolver;
-        $this->variableRenamer = $variableRenamer;
-        $this->betterNodeFinder = $betterNodeFinder;
     }
 
     /**

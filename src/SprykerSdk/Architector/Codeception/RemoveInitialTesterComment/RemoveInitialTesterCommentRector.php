@@ -27,9 +27,7 @@ class RemoveInitialTesterCommentRector extends AbstractRector
     }
 
     /**
-     * @param \PhpParser\Node $node
-     *
-     * @return int|null
+     * {@inheritDoc}
      */
     public function refactor(Node $node): ?int
     {
