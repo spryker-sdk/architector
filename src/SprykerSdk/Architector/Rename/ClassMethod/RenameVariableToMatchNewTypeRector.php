@@ -17,11 +17,12 @@ use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Stmt\ClassMethod;
 use Propel\Runtime\Collection\ObjectCollection;
-use Rector\Core\Contract\Rector\AllowEmptyConfigurableRectorInterface;
-use Rector\Core\Rector\AbstractRector;
+use Rector\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Naming\Guard\BreakingVariableRenameGuard;
 use Rector\Naming\Naming\ExpectedNameResolver;
 use Rector\Naming\VariableRenamer;
+use Rector\PhpParser\Node\BetterNodeFinder;
+use Rector\Rector\AbstractRector;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -29,23 +30,8 @@ use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 use Throwable;
 
-final class RenameVariableToMatchNewTypeRector extends AbstractRector implements AllowEmptyConfigurableRectorInterface
+final class RenameVariableToMatchNewTypeRector extends AbstractRector implements ConfigurableRectorInterface
 {
-    /**
-     * @var \Rector\Naming\Guard\BreakingVariableRenameGuard
-     */
-    private BreakingVariableRenameGuard $breakingVariableRenameGuard;
-
-    /**
-     * @var \Rector\Naming\Naming\ExpectedNameResolver
-     */
-    private ExpectedNameResolver $expectedNameResolver;
-
-    /**
-     * @var \Rector\Naming\VariableRenamer
-     */
-    private VariableRenamer $variableRenamer;
-
     /**
      * @var string
      */
@@ -76,19 +62,18 @@ final class RenameVariableToMatchNewTypeRector extends AbstractRector implements
      * @param \Rector\Naming\Guard\BreakingVariableRenameGuard $breakingVariableRenameGuard
      * @param \Rector\Naming\Naming\ExpectedNameResolver $expectedNameResolver
      * @param \Rector\Naming\VariableRenamer $variableRenamer
+     * @param \Rector\PhpParser\Node\BetterNodeFinder $betterNodeFinder
      */
     public function __construct(
-        BreakingVariableRenameGuard $breakingVariableRenameGuard,
-        ExpectedNameResolver $expectedNameResolver,
-        VariableRenamer $variableRenamer,
+        private readonly BreakingVariableRenameGuard $breakingVariableRenameGuard,
+        private readonly ExpectedNameResolver $expectedNameResolver,
+        private readonly VariableRenamer $variableRenamer,
+        private readonly BetterNodeFinder $betterNodeFinder,
     ) {
-        $this->breakingVariableRenameGuard = $breakingVariableRenameGuard;
-        $this->expectedNameResolver = $expectedNameResolver;
-        $this->variableRenamer = $variableRenamer;
     }
 
     /**
-     * @param array $configuration
+     * @param array<string, mixed> $configuration
      *
      * @return void
      */
