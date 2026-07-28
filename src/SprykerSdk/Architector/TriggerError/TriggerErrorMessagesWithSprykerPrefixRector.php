@@ -10,9 +10,12 @@ declare(strict_types=1);
 namespace SprykerSdk\Architector\TriggerError;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\BinaryOp\Concat;
 use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Scalar\String_;
+use PhpParser\NodeFinder;
 use Rector\PhpParser\Node\BetterNodeFinder;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
@@ -28,11 +31,18 @@ class TriggerErrorMessagesWithSprykerPrefixRector extends AbstractRector
     private BetterNodeFinder $betterNodeFinder;
 
     /**
-     * @param \Rector\PhpParser\Node\BetterNodeFinder $betterNodeFinder
+     * @readonly
      */
-    public function __construct(BetterNodeFinder $betterNodeFinder)
+    private NodeFinder $nodeFinder;
+
+    /**
+     * @param \Rector\PhpParser\Node\BetterNodeFinder $betterNodeFinder
+     * @param \PhpParser\NodeFinder $nodeFinder
+     */
+    public function __construct(BetterNodeFinder $betterNodeFinder, NodeFinder $nodeFinder)
     {
         $this->betterNodeFinder = $betterNodeFinder;
+        $this->nodeFinder = $nodeFinder;
     }
 
     /**
@@ -61,6 +71,12 @@ class TriggerErrorMessagesWithSprykerPrefixRector extends AbstractRector
 
             if ($messageArgument instanceof String_) {
                 return $this->refactorString($messageArgument, $node);
+            }
+
+            if ($messageArgument instanceof Variable) {
+                $this->refactorVariable($messageArgument, $node);
+
+                return null;
             }
 
             if ($messageArgument instanceof FuncCall) {
@@ -117,6 +133,89 @@ class TriggerErrorMessagesWithSprykerPrefixRector extends AbstractRector
         }
 
         return null;
+    }
+
+    /**
+     * @param \PhpParser\Node\Expr\Variable $messageArgument
+     * @param \PhpParser\Node\Expr\FuncCall $triggerErrorCall
+     *
+     * @return void
+     */
+    private function refactorVariable(Variable $messageArgument, FuncCall $triggerErrorCall): void
+    {
+        $previousAssign = $this->findPreviousAssignToVariable($messageArgument, $triggerErrorCall);
+
+        if (!$previousAssign) {
+            return;
+        }
+
+        // Find the string node we are interested in. This can be:
+        // - $message = 'Foo';
+        // - $message = 'Foo' . 'Bar';
+        // - $message = 'Foo' . 'Bar' . 'Baz';
+        /** @var \PhpParser\Node\Scalar\String_|null $mostLeftStringNode */
+        $mostLeftStringNode = $this->betterNodeFinder->findFirstInstanceOf($previousAssign->expr, String_::class);
+
+        if (!$mostLeftStringNode) {
+            return;
+        }
+
+        $currentMessage = $mostLeftStringNode->value;
+        $newMessage = $this->formatMessage($currentMessage);
+
+        if ($newMessage) {
+            $mostLeftStringNode->value = $newMessage;
+        }
+    }
+
+    /**
+     * Finds the nearest assignment to $variable that occurs, textually, before $triggerErrorCall.
+     *
+     * Note: BetterNodeFinder::findPreviousAssignToExpr() (and the previous-statement lookup it
+     * relied on) was removed in Rector 2.x with no replacement, so this walks the whole file's
+     * AST directly and picks the closest matching assignment by line number instead.
+     *
+     * @param \PhpParser\Node\Expr\Variable $variable
+     * @param \PhpParser\Node\Expr\FuncCall $triggerErrorCall
+     *
+     * @return \PhpParser\Node\Expr\Assign|null
+     */
+    private function findPreviousAssignToVariable(Variable $variable, FuncCall $triggerErrorCall): ?Assign
+    {
+        $variableName = $this->getName($variable);
+
+        if ($variableName === null) {
+            return null;
+        }
+
+        /** @var array<\PhpParser\Node\Expr\Assign> $assigns */
+        $assigns = $this->nodeFinder->findInstanceOf($this->getFile()->getNewStmts(), Assign::class);
+
+        $matchingAssigns = array_filter(
+            $assigns,
+            function (Assign $assign) use ($variableName, $triggerErrorCall): bool {
+                if (!$assign->var instanceof Variable) {
+                    return false;
+                }
+
+                if ($this->getName($assign->var) !== $variableName) {
+                    return false;
+                }
+
+                return $assign->getStartLine() < $triggerErrorCall->getStartLine();
+            },
+        );
+
+        if ($matchingAssigns === []) {
+            return null;
+        }
+
+        usort(
+            $matchingAssigns,
+            static fn (Assign $left, Assign $right): int => $right->getStartLine() <=> $left->getStartLine(),
+        );
+
+        return array_shift($matchingAssigns);
     }
 
     /**
@@ -185,18 +284,42 @@ CODE_SAMPLE,
                 ),
                 new CodeSample(
                     <<<'CODE_SAMPLE'
-trigger_error('Foo' . 'Bar', E_USER_DEPRECATED);
+$message = 'Foo';
+trigger_error($message, E_USER_DEPRECATED);
 CODE_SAMPLE,
                     <<<'CODE_SAMPLE'
-trigger_error('Spryker: Foo' . 'Bar', E_USER_DEPRECATED);
+$message = 'Spryker: Foo';
+trigger_error($message, E_USER_DEPRECATED);
 CODE_SAMPLE,
                 ),
                 new CodeSample(
                     <<<'CODE_SAMPLE'
-trigger_error(sprintf('Foo %s', $something), E_USER_DEPRECATED);
+$message = 'Foo' . 'Bar';
+trigger_error($message, E_USER_DEPRECATED);
 CODE_SAMPLE,
                     <<<'CODE_SAMPLE'
-trigger_error(sprintf('Spryker: Foo %s', $something), E_USER_DEPRECATED);
+$message = 'Spryker: Foo' . 'Bar';
+trigger_error($message, E_USER_DEPRECATED);
+CODE_SAMPLE,
+                ),
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
+$message = 'Foo' . 'Bar' . 'Baz';
+trigger_error($message, E_USER_DEPRECATED);
+CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
+$message = 'Spryker: Foo' . 'Bar' . 'Baz';
+trigger_error($message, E_USER_DEPRECATED);
+CODE_SAMPLE,
+                ),
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
+$message = sprintf('Foo %s', $something);
+trigger_error($message, E_USER_DEPRECATED);
+CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
+$message = sprintf('Spryker: Foo %s', $something);
+trigger_error($message, E_USER_DEPRECATED);
 CODE_SAMPLE,
                 ),
             ],
