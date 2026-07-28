@@ -27,6 +27,9 @@ class TriggerErrorMessagesWithSprykerPrefixRector extends AbstractRector
      */
     private BetterNodeFinder $betterNodeFinder;
 
+    /**
+     * @param \Rector\PhpParser\Node\BetterNodeFinder $betterNodeFinder
+     */
     public function __construct(BetterNodeFinder $betterNodeFinder)
     {
         $this->betterNodeFinder = $betterNodeFinder;
