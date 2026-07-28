@@ -12,15 +12,25 @@ namespace SprykerSdk\Architector\TriggerError;
 use PhpParser\Node;
 use PhpParser\Node\Expr\BinaryOp\Concat;
 use PhpParser\Node\Expr\FuncCall;
-use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Scalar\String_;
-use Rector\Core\Rector\AbstractRector;
+use Rector\PhpParser\Node\BetterNodeFinder;
+use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 class TriggerErrorMessagesWithSprykerPrefixRector extends AbstractRector
 {
     private string $sprykerPrefix = 'Spryker: ';
+
+    /**
+     * @readonly
+     */
+    private BetterNodeFinder $betterNodeFinder;
+
+    public function __construct(BetterNodeFinder $betterNodeFinder)
+    {
+        $this->betterNodeFinder = $betterNodeFinder;
+    }
 
     /**
      * @return array<class-string<\PhpParser\Node>>
@@ -48,12 +58,6 @@ class TriggerErrorMessagesWithSprykerPrefixRector extends AbstractRector
 
             if ($messageArgument instanceof String_) {
                 return $this->refactorString($messageArgument, $node);
-            }
-
-            if ($messageArgument instanceof Variable) {
-                $this->refactorVariable($messageArgument);
-
-                return null;
             }
 
             if ($messageArgument instanceof FuncCall) {
@@ -110,34 +114,6 @@ class TriggerErrorMessagesWithSprykerPrefixRector extends AbstractRector
         }
 
         return null;
-    }
-
-    /**
-     * @param \PhpParser\Node\Expr\Variable $messageArgument
-     *
-     * @return void
-     */
-    private function refactorVariable(Variable $messageArgument): void
-    {
-        $previousAssign = $this->betterNodeFinder->findPreviousAssignToExpr($messageArgument);
-
-        if (!$previousAssign) {
-            return;
-        }
-
-        // Find the string node we are interested in. This can be:
-        // - $message = 'Foo';
-        // - $message = 'Foo' . 'Bar';
-        // - $message = 'Foo' . 'Bar' . 'Baz';
-        /** @var \PhpParser\Node\Scalar\String_ $mostLeftStringNode */
-        $mostLeftStringNode = $this->betterNodeFinder->findFirstInstanceOf($previousAssign->expr, String_::class);
-
-        $currentMessage = $mostLeftStringNode->value;
-        $newMessage = $this->formatMessage($currentMessage);
-
-        if ($newMessage) {
-            $mostLeftStringNode->value = $newMessage;
-        }
     }
 
     /**
@@ -206,42 +182,18 @@ CODE_SAMPLE,
                 ),
                 new CodeSample(
                     <<<'CODE_SAMPLE'
-$message = 'Foo';
-trigger_error($message, E_USER_DEPRECATED);
+trigger_error('Foo' . 'Bar', E_USER_DEPRECATED);
 CODE_SAMPLE,
                     <<<'CODE_SAMPLE'
-$message = 'Spryker: Foo';
-trigger_error($message, E_USER_DEPRECATED);
+trigger_error('Spryker: Foo' . 'Bar', E_USER_DEPRECATED);
 CODE_SAMPLE,
                 ),
                 new CodeSample(
                     <<<'CODE_SAMPLE'
-$message = 'Foo' . 'Bar';
-trigger_error($message, E_USER_DEPRECATED);
+trigger_error(sprintf('Foo %s', $something), E_USER_DEPRECATED);
 CODE_SAMPLE,
                     <<<'CODE_SAMPLE'
-$message = 'Spryker: Foo' . 'Bar';
-trigger_error($message, E_USER_DEPRECATED);
-CODE_SAMPLE,
-                ),
-                new CodeSample(
-                    <<<'CODE_SAMPLE'
-$message = 'Foo' . 'Bar' . 'Baz';
-trigger_error($message, E_USER_DEPRECATED);
-CODE_SAMPLE,
-                    <<<'CODE_SAMPLE'
-$message = 'Spryker: Foo' . 'Bar' . 'Baz';
-trigger_error($message, E_USER_DEPRECATED);
-CODE_SAMPLE,
-                ),
-                new CodeSample(
-                    <<<'CODE_SAMPLE'
-$message = sprintf('Foo %s', $something);
-trigger_error($message, E_USER_DEPRECATED);
-CODE_SAMPLE,
-                    <<<'CODE_SAMPLE'
-$message = sprintf('Spryker: Foo %s', $something);
-trigger_error($message, E_USER_DEPRECATED);
+trigger_error(sprintf('Spryker: Foo %s', $something), E_USER_DEPRECATED);
 CODE_SAMPLE,
                 ),
             ],

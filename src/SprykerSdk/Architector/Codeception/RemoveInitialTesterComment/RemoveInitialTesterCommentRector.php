@@ -11,7 +11,8 @@ namespace SprykerSdk\Architector\Codeception\RemoveInitialTesterComment;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Nop;
-use Rector\Core\Rector\AbstractRector;
+use PhpParser\NodeVisitor;
+use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
@@ -28,16 +29,16 @@ class RemoveInitialTesterCommentRector extends AbstractRector
     /**
      * @param \PhpParser\Node $node
      *
-     * @return \PhpParser\Node|null
+     * @return int|null
      */
-    public function refactor(Node $node): ?Node
+    public function refactor(Node $node): ?int
     {
         $docComments = $node->getAttribute('comments');
 
         /** @var \PhpParser\Comment\Doc $docComment */
         foreach ($docComments as $docComment) {
             if (strpos($docComment->getText(), 'Define custom actions here') !== false) {
-                $this->removeNode($node);
+                return NodeVisitor::REMOVE_NODE;
             }
         }
 

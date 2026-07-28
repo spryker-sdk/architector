@@ -1,6 +1,4 @@
 parameters:
-    checkMissingIterableValueType: false
-
     ignoreErrors:
             - '#Class .+ObjectCollection not found.#'
             - '#Class .+FormBuilderInterface not found.#'
