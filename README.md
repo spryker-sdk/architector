@@ -1,7 +1,7 @@
 # Architector
 [![CI](https://github.com/spryker-sdk/architector/workflows/CI/badge.svg?branch=master)](https://github.com/spryker-sdk/architector/actions?query=workflow%3ACI+branch%3Amaster)
 [![Latest Stable Version](https://poser.pugx.org/spryker-sdk/architector/v/stable.svg)](https://packagist.org/packages/spryker-sdk/architector)
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.4-8892BF.svg)](https://php.net/)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.3-8892BF.svg)](https://php.net/)
 [![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
 
 ## Installation
